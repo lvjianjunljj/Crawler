@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+  <MainMethodName>UpdateRepositoryName</MainMethodName>
+  <RootURL>https://github.com</RootURL>
+  <CrawlTimeout>10000</CrawlTimeout>
+  <UserAgent>"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)</UserAgent>
+  <MaxRetryWhenCrawl>3</MaxRetryWhenCrawl>
+  <MaxRedirectCount>1</MaxRedirectCount>
+  <DBserver>STCVM-H03</DBserver>
+  <DBName>Crawler</DBName>
+  <DBUID>sa</DBUID>
+  <DBPWD>123456Abcd</DBPWD>
+  <TableName>CrawlerGitDetailData</TableName>
+  <ReadmeContentTableName>CrawlerGitReadmeContent</ReadmeContentTableName>
+  <DBPrimaryKey>repositoryPath</DBPrimaryKey>
+  <DBInsertCountEveryTime>100</DBInsertCountEveryTime>
+  <DBExecuteCountEveryTime>1000</DBExecuteCountEveryTime>
+  <URLFile>D:\git crawler\data\remain.txt</URLFile>
+  <RemainDataFile>D:\git crawler\data\remain.txt</RemainDataFile>
+  <LogDir>D:\git crawler\log</LogDir>
+  <DownloadZipDir>D:\git crawler\download zip</DownloadZipDir>
+  <ZipExtractDir>D:\git crawler\zip extract</ZipExtractDir>
+  <ReadMeFileDir>D:\git crawler\readme</ReadMeFileDir>
+  <JobList>
+    <Job index ="1">first</Job>
+    <Job index ="2">second</Job>
+    <Job index ="3">third</Job>
+    <Job index ="4">forth</Job>
+    <Job index ="5">fifth</Job>
+  </JobList>
+</Configuration>
