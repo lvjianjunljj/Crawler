@@ -65,45 +65,45 @@ namespace Crawler
                 }
             }
         }
-        //public static void StoreDataToDBCrawlerGitDetailDataPart(ref List<DBCrawlerGitDetailDataModel> inputList)
-        //{
-        //    Connection = new SqlConnection("Server=" + Configuration.DBserver + ";DataBase=" + Configuration.DBName + ";uid=" + Configuration.DBUID + ";pwd=" + Configuration.DBPWD);
-        //    Connection.Open();
-        //    StoreDataToDBCrawlerGitDetailDataPart(ref inputList, 0, inputList.Count);
-        //    Connection.Close();
-        //}
-        //private static void StoreDataToDBCrawlerGitDetailDataPart(ref List<DBCrawlerGitDetailDataModel> inputList, int startIndex, int endIndex)
-        //{
-        //    if (startIndex >= endIndex)
-        //    {
-        //        return;
-        //    }
-        //    string dbInsertSql = "INSERT INTO [" + Configuration.DBName + "].[dbo].[" + Configuration.TableName + "]([repositoryPath],[downloadURL],[impressionCount],[clickCount],[repositoryContent],[topicsList],[readmeFileName])VALUES";
-        //    for (int i = startIndex; i < endIndex; i++)
-        //    {
-        //        DBCrawlerGitDetailDataModel model = inputList[i];
-        //        string topicsListStr = "";
-        //        for (int j = 0; j < model.topicsList.Count; j++)
-        //        {
-        //            if (j > 0)
-        //            {
-        //                topicsListStr += ";";
-        //            }
-        //            topicsListStr += model.topicsList[j];
-        //        }
-        //        dbInsertSql += "('" + model.repositoryPath + "','" + model.downloadURL + "','" + model.impressionCount + "','" + model.clickCount + "','" + model.repositoryContent + "','" + topicsListStr + "','" + model.readmeFileName + "'),";
-        //    }
-        //    bool success = ExecuteByText(dbInsertSql.Remove(dbInsertSql.Length - 1, 1));
-        //    if (!success)
-        //    {
-        //        if (startIndex + 1 < endIndex)
-        //        {
-        //            int midIndex = (startIndex + endIndex) / 2;
-        //            StoreDataToDBCrawlerGitDetailDataPart(ref inputList, startIndex, midIndex);
-        //            StoreDataToDBCrawlerGitDetailDataPart(ref inputList, midIndex, endIndex);
-        //        }
-        //    }
-        //}
+        public static void StoreDataToDBCrawlerGitDetailDataPart(ref List<DBCrawlerGitDetailDataModel> inputList)
+        {
+            Connection = new SqlConnection("Server=" + Configuration.DBserver + ";DataBase=" + Configuration.DBName + ";uid=" + Configuration.DBUID + ";pwd=" + Configuration.DBPWD);
+            Connection.Open();
+            StoreDataToDBCrawlerGitDetailDataPart(ref inputList, 0, inputList.Count);
+            Connection.Close();
+        }
+        private static void StoreDataToDBCrawlerGitDetailDataPart(ref List<DBCrawlerGitDetailDataModel> inputList, int startIndex, int endIndex)
+        {
+            if (startIndex >= endIndex)
+            {
+                return;
+            }
+            string dbInsertSql = "INSERT INTO [" + Configuration.DBName + "].[dbo].[" + Configuration.TableName + "]([repositoryPath],[downloadURL],[impressionCount],[clickCount],[repositoryContent],[topicsList],[readmeFileName])VALUES";
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                DBCrawlerGitDetailDataModel model = inputList[i];
+                string topicsListStr = "";
+                for (int j = 0; j < model.topicsList.Count; j++)
+                {
+                    if (j > 0)
+                    {
+                        topicsListStr += ";";
+                    }
+                    topicsListStr += model.topicsList[j];
+                }
+                dbInsertSql += "('" + model.repositoryPath + "','" + model.downloadURL + "','" + model.impressionCount + "','" + model.clickCount + "','" + model.repositoryContent + "','" + topicsListStr + "','" + model.readmeFileName + "'),";
+            }
+            bool success = ExecuteByText(dbInsertSql.Remove(dbInsertSql.Length - 1, 1));
+            if (!success)
+            {
+                if (startIndex + 1 < endIndex)
+                {
+                    int midIndex = (startIndex + endIndex) / 2;
+                    StoreDataToDBCrawlerGitDetailDataPart(ref inputList, startIndex, midIndex);
+                    StoreDataToDBCrawlerGitDetailDataPart(ref inputList, midIndex, endIndex);
+                }
+            }
+        }
         public static void StoreDataToDBCrawlerGitReadmeContentPart(ref List<string> repositoryPathList, ref List<string> readmeFileContentList)
         {
             Connection = new SqlConnection("Server=" + Configuration.DBserver + ";DataBase=" + Configuration.DBName + ";uid=" + Configuration.DBUID + ";pwd=" + Configuration.DBPWD);
@@ -293,6 +293,35 @@ namespace Crawler
                 return readmeFileNameList;
             }
         }
+        public static List<string> GetDownloadURLList(out List<string> repositoryNameList)
+        {
+            repositoryNameList = new List<string>();
+            List<string> downloadURLList = new List<string>();
+            Connection = new SqlConnection("Server=" + Configuration.DBserver + ";DataBase=" + Configuration.DBName + ";uid=" + Configuration.DBUID + ";pwd=" + Configuration.DBPWD);
+            Connection.Open();
+            string dbQuerySql = "SELECT * FROM [" + Configuration.DBName + "].[dbo].[" + Configuration.TableName + "] order by id";
+            try
+            {
+                SqlCommand cmd = new SqlCommand(dbQuerySql, Connection);
+                cmd.CommandType = CommandType.Text;
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    downloadURLList.Add(reader["downloadURL"].ToString());
+                    repositoryNameList.Add(reader["repositoryName"].ToString());
+                }
+                Connection.Close();
+                return downloadURLList;
+            }
+            catch (Exception ex)
+            {
+                Connection.Close();
+                Console.WriteLine(ex.Message);
+                return downloadURLList;
+            }
+        }
+
         public static string GetReadmeFileName(string repositoryPath)
         {
             string readmeFileName = "";

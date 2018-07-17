@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Configuration>
-  <MainMethodName>UpdateRepositoryName</MainMethodName>
+  <MainMethodName>GitCodeZipExtractToDirectory</MainMethodName>
   <RootURL>https://github.com</RootURL>
   <CrawlTimeout>10000</CrawlTimeout>
   <UserAgent>"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)</UserAgent>

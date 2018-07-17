@@ -170,49 +170,80 @@ namespace Crawler
             return null;
         }
 
-        public static string HttpDownloadFile(string url, string path)
+        public static string HttpDownloadFile(string url, string path, bool repeatDown = true, bool deleteIfRepeat = true, string fileName = null)
         {
-            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-            string fileName = response.Headers["Content-Disposition"];//attachment;filename=FileName.txt
-            if (string.IsNullOrEmpty(fileName))
+            if (!repeatDown && fileName != null)
             {
-                fileName = response.ResponseUri.Segments[response.ResponseUri.Segments.Length - 1];
-            }
-            else
-            {
-                fileName = fileName.Remove(0, fileName.IndexOf("filename=") + 9);
-            }
-            string filePath = Path.Combine(path, fileName);
-            int index = 1;
-            while (File.Exists(filePath))
-            {
-                if (index == 1)
+                string filePathTemp = Path.Combine(path, fileName);
+                if (File.Exists(filePathTemp))
                 {
-                    fileName = fileName.Replace(".zip", (++index) + ".zip");
-                }
-                else
-                {
-                    fileName = fileName.Replace(index + ".zip", (++index) + ".zip");
-                }
-                filePath = Path.Combine(path, fileName);
-
-            }
-            using (Stream responseStream = response.GetResponseStream())
-            {
-                long totalLength = response.ContentLength;
-                //using (Stream stream = new FileStream(filePath, overwrite ? FileMode.Create : FileMode.CreateNew))
-                using (Stream stream = new FileStream(filePath, FileMode.CreateNew))
-                {
-                    byte[] bArr = new byte[1024];
-                    int size;
-                    while ((size = responseStream.Read(bArr, 0, bArr.Length)) > 0)
+                    if (deleteIfRepeat)
                     {
-                        stream.Write(bArr, 0, size);
+                        File.Delete(filePathTemp);
+                    }
+                    else
+                    {
+                        return fileName;
                     }
                 }
             }
-            return fileName;
+            string filePath = "";
+            try
+            {
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                if (fileName == null)
+                {
+                    fileName = response.Headers["Content-Disposition"];//attachment;filename=FileName.txt
+                    if (string.IsNullOrEmpty(fileName))
+                    {
+                        fileName = response.ResponseUri.Segments[response.ResponseUri.Segments.Length - 1];
+                    }
+                    else
+                    {
+                        fileName = fileName.Remove(0, fileName.IndexOf("filename=") + 9);
+                    }
+                }
+                filePath = Path.Combine(path, fileName);
+                int index = 1;
+                while (File.Exists(filePath))
+                {
+                    if (index == 1)
+                    {
+                        fileName = fileName.Replace(".zip", (++index) + ".zip");
+                    }
+                    else
+                    {
+                        fileName = fileName.Replace(index + ".zip", (++index) + ".zip");
+                    }
+                    filePath = Path.Combine(path, fileName);
+
+                }
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    long totalLength = response.ContentLength;
+                    //using (Stream stream = new FileStream(filePath, overwrite ? FileMode.Create : FileMode.CreateNew))
+                    using (Stream stream = new FileStream(filePath, FileMode.CreateNew))
+                    {
+                        byte[] bArr = new byte[1024];
+                        int size;
+                        while ((size = responseStream.Read(bArr, 0, bArr.Length)) > 0)
+                        {
+                            stream.Write(bArr, 0, size);
+                        }
+                    }
+                }
+                return fileName;
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog("HttpDownloadFile error url is: " + url);
+                if (filePath != "" && File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+                return filePath;
+            }
         }
 
     }

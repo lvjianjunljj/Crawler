@@ -36,7 +36,7 @@ namespace Crawler
         public int clickCount { get; set; }
         public string repositoryContent { get; set; }
         public List<string> topicsList { get; set; }
-
+        public string readmeFileName { get; set; }
         public DBCrawlerGitDetailDataModel(
             string repositoryPath,
             string downloadURL,
@@ -59,6 +59,7 @@ namespace Crawler
                     this.topicsList[i] = DBGitDataModel.CheckDBStringData(this.topicsList[i]);
                 }
             }
+            this.readmeFileName = readmeFileName;
 
         }
     }

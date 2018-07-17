@@ -26,7 +26,6 @@ namespace Crawler
             object obj = Activator.CreateInstance(tp);
             MethodInfo method = tp.GetMethod(Configuration.MainMethodName);
             method.Invoke(obj, inputStrList);
-            Console.ReadKey();
         }
 
         public static void CheckZipFile(string inputStrFirst, string InputStrSecond)
@@ -190,30 +189,11 @@ namespace Crawler
         }
         public static void CrawlAndStoreCrawlerGitDetailData(string inputStrFirst, string InputStrSecond)
         {
-            int startIndex = 0, endIndex = 0;
-            if (inputStrFirst != null && inputStrFirst.Length > 0)
+            int[] indexData = GetIndex(inputStrFirst, InputStrSecond);
+            int startIndex = indexData[0], endIndex = indexData[1];
+            if (startIndex < 0)
             {
-                try
-                {
-                    startIndex = Convert.ToInt32(inputStrFirst);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Crawl And Store Crawler GitDetailData First Input Error: " + e.Message);
-                    return;
-                }
-            }
-            if (InputStrSecond != null && InputStrSecond.Length > 0)
-            {
-                try
-                {
-                    endIndex = Convert.ToInt32(InputStrSecond);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Crawl And Store Crawler GitDetailData Second Input Error: " + e.Message);
-                    return;
-                }
+                return;
             }
             DateTime startTime;
             bool start = startIndex > 0;
@@ -349,30 +329,11 @@ namespace Crawler
 
         public static void UpdateDBReadmeName(string inputStrFirst, string InputStrSecond)
         {
-            int startIndex = 0, endIndex = 0;
-            if (inputStrFirst != null && inputStrFirst.Length > 0)
+            int[] indexData = GetIndex(inputStrFirst, InputStrSecond);
+            int startIndex = indexData[0], endIndex = indexData[1];
+            if (startIndex < 0)
             {
-                try
-                {
-                    startIndex = Convert.ToInt32(inputStrFirst);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Crawl And Store Crawler GitDetailData First Input Error: " + e.Message);
-                    return;
-                }
-            }
-            if (InputStrSecond != null && InputStrSecond.Length > 0)
-            {
-                try
-                {
-                    endIndex = Convert.ToInt32(InputStrSecond);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Crawl And Store Crawler GitDetailData Second Input Error: " + e.Message);
-                    return;
-                }
+                return;
             }
             DateTime startTime = DateTime.Now;
             List<string> emptyReadmeDataList = DBUtils.GetEmptyReadmeData();
@@ -427,30 +388,11 @@ namespace Crawler
         }
         public static void StoreReadmeContentDataToDB(string inputStrFirst, string InputStrSecond)
         {
-            int startIndex = 0, endIndex = 0;
-            if (inputStrFirst != null && inputStrFirst.Length > 0)
+            int[] indexData = GetIndex(inputStrFirst, InputStrSecond);
+            int startIndex = indexData[0], endIndex = indexData[1];
+            if (startIndex < 0)
             {
-                try
-                {
-                    startIndex = Convert.ToInt32(inputStrFirst);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Crawl And Store Crawler GitDetailData First Input Error: " + e.Message);
-                    return;
-                }
-            }
-            if (InputStrSecond != null && InputStrSecond.Length > 0)
-            {
-                try
-                {
-                    endIndex = Convert.ToInt32(InputStrSecond);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Crawl And Store Crawler GitDetailData Second Input Error: " + e.Message);
-                    return;
-                }
+                return;
             }
             DateTime startTime = DateTime.Now;
             List<string> repositoryPathList;
@@ -506,30 +448,11 @@ namespace Crawler
         }
         public static void StoreReadmeContentDataToOneTable(string inputStrFirst, string InputStrSecond)
         {
-            int startIndex = 0, endIndex = 0;
-            if (inputStrFirst != null && inputStrFirst.Length > 0)
+            int[] indexData = GetIndex(inputStrFirst, InputStrSecond);
+            int startIndex = indexData[0], endIndex = indexData[1];
+            if (startIndex < 0)
             {
-                try
-                {
-                    startIndex = Convert.ToInt32(inputStrFirst);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Crawl And Store Crawler GitDetailData First Input Error: " + e.Message);
-                    return;
-                }
-            }
-            if (InputStrSecond != null && InputStrSecond.Length > 0)
-            {
-                try
-                {
-                    endIndex = Convert.ToInt32(InputStrSecond);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Crawl And Store Crawler GitDetailData Second Input Error: " + e.Message);
-                    return;
-                }
+                return;
             }
             DateTime startTime = DateTime.Now;
             List<string> repositoryPathList;
@@ -561,30 +484,11 @@ namespace Crawler
 
         public static void UpdateRepositoryName(string inputStrFirst, string InputStrSecond)
         {
-            int startIndex = 0, endIndex = 0;
-            if (inputStrFirst != null && inputStrFirst.Length > 0)
+            int[] indexData = GetIndex(inputStrFirst, InputStrSecond);
+            int startIndex = indexData[0], endIndex = indexData[1];
+            if (startIndex < 0)
             {
-                try
-                {
-                    startIndex = Convert.ToInt32(inputStrFirst);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Crawl And Store Crawler GitDetailData First Input Error: " + e.Message);
-                    return;
-                }
-            }
-            if (InputStrSecond != null && InputStrSecond.Length > 0)
-            {
-                try
-                {
-                    endIndex = Convert.ToInt32(InputStrSecond);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Crawl And Store Crawler GitDetailData Second Input Error: " + e.Message);
-                    return;
-                }
+                return;
             }
             DateTime startTime = DateTime.Now;
             List<string> repositoryNameList;
@@ -623,6 +527,144 @@ namespace Crawler
                 }
             }
             Console.WriteLine("Store Readme Content Data To CrawlerGitReadmeContent All End*****************************");
+        }
+        public static void DownloadGitCodeZip(string inputStrFirst, string InputStrSecond)
+        {
+            int[] indexData = GetIndex(inputStrFirst, InputStrSecond);
+            int startIndex = indexData[0], endIndex = indexData[1];
+            if (startIndex < 0)
+            {
+                return;
+            }
+            DateTime startTime = DateTime.Now;
+            List<string> repositoryNameList;
+            List<string> downloadURLList = DBUtils.GetDownloadURLList(out repositoryNameList);
+            DateTime now = DateTime.Now;
+            int timeCost = (int)(now - startTime).TotalSeconds;
+            startTime = now;
+            Console.WriteLine("Get Name List Time cost: " + timeCost + "s");
+            if (downloadURLList.Count != repositoryNameList.Count)
+            {
+                Console.WriteLine("downloadURLList.Count: \"" + downloadURLList.Count + "\" is not equal to repositoryNameList.Count: \"" + repositoryNameList.Count + "\", return!!!");
+                return;
+            }
+            Console.WriteLine("Data Line Count: " + downloadURLList.Count);
+            endIndex = endIndex > 0 ? endIndex : downloadURLList.Count;
+            //ThreadPool.SetMaxThreads(1, 1);
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                //ThreadPool.QueueUserWorkItem(new WaitCallback(DownloadFileTaskMethod), new GitCodeZipInfoClass(downloadURLList[i], repositoryNameList[i].Replace("/", "_").Replace("\\", "_") + ".zip"));
+                string fileName = CrawlerClass.HttpDownloadFile(downloadURLList[i], Configuration.DownloadZipDir, false, false, repositoryNameList[i].Replace("/", "_").Replace("\\", "_") + ".zip");
+                Console.WriteLine("Run " + i + " line fileName: " + fileName + " will be downloaded");
+                //Thread.Sleep(100);
+            }
+            Console.WriteLine("Download Git Code Zip All End*****************************");
+        }
+        private static void DownloadFileTaskMethod(Object gitCodeZipInfoObj)
+        {
+            CrawlerClass.HttpDownloadFile(((GitCodeZipInfoClass)gitCodeZipInfoObj).downloadURL, Configuration.DownloadZipDir, false, true, ((GitCodeZipInfoClass)gitCodeZipInfoObj).repositoryName);
+            Console.WriteLine(((GitCodeZipInfoClass)gitCodeZipInfoObj).repositoryName + " will be downloaded");
+        }
+        private class GitCodeZipInfoClass
+        {
+            public string downloadURL { get; set; }
+            public string repositoryName { get; set; }
+            public GitCodeZipInfoClass(string downloadURL, string repositoryName)
+            {
+                this.downloadURL = downloadURL;
+                this.repositoryName = repositoryName;
+            }
+        }
+
+        public static void CheckNotDownloadGitCodeZip(string inputStrFirst, string InputStrSecond)
+        {
+            int[] indexData = GetIndex(inputStrFirst, InputStrSecond);
+            int startIndex = indexData[0], endIndex = indexData[1];
+            if (startIndex < 0)
+            {
+                return;
+            }
+            DateTime startTime = DateTime.Now;
+            List<string> downloadURLList = DBUtils.GetDownloadURLList(out List<string> repositoryNameList);
+            List<string> notDowmLoadRepositoryNameList = new List<string>();
+            List<string> notDownloadURLList = new List<string>();
+            if (downloadURLList.Count != repositoryNameList.Count)
+            {
+                Console.WriteLine("downloadURLList.Count: \"" + downloadURLList.Count + "\" is not equal to repositoryNameList.Count: \"" + repositoryNameList.Count + "\", return!!!");
+                return;
+            }
+            Console.WriteLine("Data Line Count: " + downloadURLList.Count);
+            endIndex = endIndex > 0 ? endIndex : downloadURLList.Count;
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                string filePath = Path.Combine(Configuration.DownloadZipDir, repositoryNameList[i].Replace("/", "_").Replace("\\", "_") + ".zip");
+                if (!File.Exists(filePath))
+                {
+                    notDowmLoadRepositoryNameList.Add(repositoryNameList[i]);
+                    notDownloadURLList.Add(downloadURLList[i]);
+                }
+            }
+            Console.WriteLine("Not Download Git Code Zip File Count: " + notDowmLoadRepositoryNameList.Count + " " + notDownloadURLList.Count);
+            for (int i = 0; i < Math.Min(notDowmLoadRepositoryNameList.Count, notDownloadURLList.Count); i++)
+            {
+                Console.WriteLine("notDowmLoadRepositoryName: " + notDowmLoadRepositoryNameList[i]);
+                Console.WriteLine("notDownloadURLList: " + notDownloadURLList[i]);
+            }
+            Console.WriteLine();
+        }
+
+        public static void GitCodeZipExtractToDirectory(string inputStrFirst, string InputStrSecond)
+        {
+            int[] indexData = GetIndex(inputStrFirst, InputStrSecond);
+            int startIndex = indexData[0], endIndex = indexData[1];
+            if (startIndex < 0)
+            {
+                return;
+            }
+            string[] gitCodeZipFullPathList = Directory.GetFiles(Configuration.DownloadZipDir);
+            Console.WriteLine("Data Line Count: " + gitCodeZipFullPathList.Length);
+            endIndex = endIndex > 0 ? endIndex : gitCodeZipFullPathList.Length;
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                string fileName = Path.GetFileName(gitCodeZipFullPathList[i]);
+                string dirName = FileUtils.ZipExtractToDirectory(Path.Combine(Configuration.DownloadZipDir, fileName), Configuration.ZipExtractDir);
+                FileUtils.DfsChangeFileExtensionName(Path.Combine(Configuration.ZipExtractDir, dirName), ".exe", "_exe.txt");
+                Console.WriteLine("Run " + i + " line fileName: " + fileName + " will be extracted to directory");
+            }
+            Console.WriteLine(gitCodeZipFullPathList.Length);
+
+
+        }
+
+
+        private static int[] GetIndex(string inputStrFirst, string InputStrSecond)
+        {
+            int startIndex = 0, endIndex = 0;
+            if (inputStrFirst != null && inputStrFirst.Length > 0)
+            {
+                try
+                {
+                    startIndex = Convert.ToInt32(inputStrFirst);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Crawl And Store Crawler GitDetailData First Input Error: " + e.Message);
+                    return new int[] { -1, -1 };
+                }
+            }
+            if (InputStrSecond != null && InputStrSecond.Length > 0)
+            {
+                try
+                {
+                    endIndex = Convert.ToInt32(InputStrSecond);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Crawl And Store Crawler GitDetailData Second Input Error: " + e.Message);
+                    return new int[] { -1, -1 };
+                }
+            }
+            return new int[] { startIndex, endIndex };
         }
     }
 }

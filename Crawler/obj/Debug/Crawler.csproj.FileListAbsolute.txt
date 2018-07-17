@@ -5,3 +5,11 @@ C:\Users\jianjlv\source\repos\Crawler\Crawler\Crawler\bin\Debug\Crawler.exe.conf
 C:\Users\jianjlv\source\repos\Crawler\Crawler\Crawler\bin\Debug\Crawler.pdb
 C:\Users\jianjlv\source\repos\Crawler\Crawler\Crawler\obj\Debug\Crawler.exe
 C:\Users\jianjlv\source\repos\Crawler\Crawler\Crawler\obj\Debug\Crawler.pdb
+C:\Users\jianjlv\source\repos\git\Crawler\Crawler\bin\Debug\Config.xml
+C:\Users\jianjlv\source\repos\git\Crawler\Crawler\bin\Debug\Crawler.exe.config
+C:\Users\jianjlv\source\repos\git\Crawler\Crawler\bin\Debug\Crawler.exe
+C:\Users\jianjlv\source\repos\git\Crawler\Crawler\bin\Debug\Crawler.pdb
+C:\Users\jianjlv\source\repos\git\Crawler\Crawler\obj\Debug\Crawler.csproj.CoreCompileInputs.cache
+C:\Users\jianjlv\source\repos\git\Crawler\Crawler\obj\Debug\Crawler.exe
+C:\Users\jianjlv\source\repos\git\Crawler\Crawler\obj\Debug\Crawler.pdb
+C:\Users\jianjlv\source\repos\git\Crawler\Crawler\obj\Debug\Crawler.csprojAssemblyReference.cache

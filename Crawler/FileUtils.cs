@@ -62,59 +62,60 @@ namespace Crawler
         public static string ZipExtractToDirectory(string zipFilePath, string toDirPath)
         {
             //ZipFile.ExtractToDirectory("D://yt-master.zip", "D://");
-            ZipArchive archive = ZipFile.OpenRead(zipFilePath);
-            string dirName;
-            try
-            {
-                // Get file list
-                var files = archive.Entries;
-                dirName = files[0].FullName.Remove(files[0].FullName.Length - 1, 1);
-            }
-            catch (Exception e)
-            {
-                Logger.WriteLog("Extract to directory error:" + e.Message);
-                int index = zipFilePath.LastIndexOf("\\");
-                dirName = zipFilePath.Substring(index + 1, zipFilePath.Length - 4 - index - 1);
-            }
+            //ZipArchive archive = ZipFile.OpenRead(zipFilePath);
+            string zipFileName = Path.GetFileName(zipFilePath);
+            string dirName = zipFileName.Substring(0, zipFileName.Length - 4) ;
+            //try
+            //{
+            //    // Get file list
+            //    var files = archive.Entries;
+            //    dirName = files[0].FullName.Remove(files[0].FullName.Length - 1, 1);
+            //}
+            //catch (Exception e)
+            //{
+            //    Logger.WriteLog("Extract to directory error:" + e.Message);
+            //    int index = zipFilePath.LastIndexOf("\\");
+            //    dirName = zipFilePath.Substring(index + 1, zipFilePath.Length - 4 - index - 1);
+            //}
             string dirPath = Path.Combine(toDirPath, dirName);
             if (!Directory.Exists(dirPath))
             {
                 try
                 {
-                    ZipFile.ExtractToDirectory(zipFilePath, toDirPath);
+                    ZipFile.ExtractToDirectory(zipFilePath, dirPath);
                 }
                 catch (Exception e)
                 {
                     Logger.WriteLog("Extract To Directory Error: " + e.Message);
                     Logger.WriteLog("zipFilePath: " + zipFilePath);
-                    //File.Delete(zipFilePath);
+                    File.Delete(zipFilePath);
                 }
             }
             else
             {
                 Logger.WriteLog("Extract To Directory Warning: \"" + dirPath + "\" has exist!!!");
-                Directory.Move(dirPath, dirPath + "_temp");
-                try
-                {
-                    ZipFile.ExtractToDirectory(zipFilePath, toDirPath);
-                }
-                catch (Exception e)
-                {
-                    Logger.WriteLog("Extract To Directory Error: " + e.Message);
-                    Logger.WriteLog("zipFilePath: " + zipFilePath);
-                    //File.Delete(zipFilePath);
-                }
-                int index = 2;
-                string dirNameTemp = dirName + (index++);
-                string dirPathTemp = Path.Combine(toDirPath, dirNameTemp);
-                while (Directory.Exists(dirPathTemp))
-                {
-                    dirNameTemp = dirName + (index++);
-                    dirPathTemp = Path.Combine(toDirPath, dirNameTemp);
-                }
-                Directory.Move(dirPath, dirPathTemp);
-                Directory.Move(dirPath + "_temp", dirPath);
-                dirName = dirNameTemp;
+                //Directory.Move(dirPath, dirPath + "_temp");
+                //try
+                //{
+                //    ZipFile.ExtractToDirectory(zipFilePath, toDirPath);
+                //}
+                //catch (Exception e)
+                //{
+                //    Logger.WriteLog("Extract To Directory Error: " + e.Message);
+                //    Logger.WriteLog("zipFilePath: " + zipFilePath);
+                //    //File.Delete(zipFilePath);
+                //}
+                //int index = 2;
+                //string dirNameTemp = dirName + (index++);
+                //string dirPathTemp = Path.Combine(toDirPath, dirNameTemp);
+                //while (Directory.Exists(dirPathTemp))
+                //{
+                //    dirNameTemp = dirName + (index++);
+                //    dirPathTemp = Path.Combine(toDirPath, dirNameTemp);
+                //}
+                //Directory.Move(dirPath, dirPathTemp);
+                //Directory.Move(dirPath + "_temp", dirPath);
+                //dirName = dirNameTemp;
             }
             return dirName;
         }
@@ -227,6 +228,42 @@ namespace Crawler
             //清空缓冲区、关闭流
             fs.Flush();
             fs.Close();
+        }
+
+        public static void DfsChangeFileExtensionName(string path, string oldExtensionName, string newExtensionName)
+        {
+            if (Directory.Exists(path))
+            {
+                string[] childrenDirPath = Directory.GetDirectories(path);
+                string[] childrenFilPath = Directory.GetFiles(path);
+                foreach (string childDirPath in childrenDirPath)
+                {
+                    DfsChangeFileExtensionName(childDirPath, oldExtensionName, newExtensionName);
+                }
+                foreach (string childFilPath in childrenFilPath)
+                {
+                    ChangeFileExtensionName(childFilPath, oldExtensionName, newExtensionName);
+                }
+            }
+            else
+            {
+                ChangeFileExtensionName(path, oldExtensionName, newExtensionName);
+            }
+        }
+        private static void ChangeFileExtensionName(string filePath, string oldExtensionName, string newExtensionName)
+        {
+            if (File.Exists(filePath) && Path.GetExtension(filePath) == oldExtensionName)
+            {
+                try
+                {
+                    File.Move(filePath, filePath.Substring(0, filePath.Length - oldExtensionName.Length) + newExtensionName);
+                    Logger.WriteLog("[Info] Extract File has exe file... Move Successfully...The file path is: " + filePath);
+                } catch (Exception e)
+                {
+                Logger.WriteLog("[Warning] Extract File has exe file and fail to move ... The file path is: " + filePath);
+
+                }
+            }
         }
     }
 }
